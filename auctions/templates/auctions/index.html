@@ -1,0 +1,38 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+    {% for auction in auction_list %}
+        <a href="{% url 'listing' auction.id %}">
+            <div class="p-5 m-5 text-left d-flex flex-row text-white item-list-mod">
+                <div class="col-7 bg-item">
+                    <div>
+                        <div class="large border-bottom p-2"><b>{{auction.name}}</b></div>
+                    </div>
+                    <div class="flex-column">
+                        <div class="p-2"><label></label>Price : <b>{{auction.start_bid}} $</b></div>
+                        <div style="font-size: 10px; padding : 5px">Created on - {{auction.datetime}}(UTC)</div>
+                    </div>
+                    <div>
+                        <div class="small pt-2 pl-2 text-truncate">{{auction.description}}</div>
+                    </div>
+                </div>
+            {% if not img_flag %}
+                {% if auction.image_url %}
+                <div class="col-auto text-center">
+                    <img class="img-fluid img-thumbnail" style="width: 150px;height: 180px;" src="{{auction.image_url}}">
+                </div>
+                {% else %}
+                <div class="col-auto text-center">
+                    <img class="img-fluid img-thumbnail" style="width: 150px;height: 180px;" src="static/no-img.jpg">
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="col-auto text-center">
+                    <img class="img-fluid img-thumbnail" style="width: 150px;height: 180px;" src="../static/no-img.jpg">
+                </div>
+             {% endif %}
+            </div>
+        </a>
+    {% endfor %}
+{% endblock %}

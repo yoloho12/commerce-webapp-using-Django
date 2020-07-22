@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<!--TODO-->
+{% for auction in auction_list %}
+<a href="{% url 'listing' auction.id %}">
+    <div class="m-2 border border-dark d-flex flex-row text-white">
+        <div class="col-10 bg-info">
+            <div>
+                <div class="large border-bottom p-2">{{auction.name}}</div>
+            </div>
+            <div class="d-flex">
+                <div class="p-2"><label></label>Price : <b>{{auction.start_bid}} $</b></div>
+                <div style="font-size: smaller; padding-top : 10px">Created on - {{auction.datetime}}(UTC)</div>
+            </div>
+            <div>
+                <div class="small p-2">{{auction.description}}</div>
+            </div>
+        </div>
+        <div class="col-2 bg-info border border-info text-center">
+            <img class="img-fluid img-thumbnail" style="width: 100%;height: 100%;" src="{{auction.image_url}}">
+        </div>
+    </div>
+</a>
+{% endfor %}
+
+{% endblock %}

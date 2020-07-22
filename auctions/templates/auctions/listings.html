@@ -1,0 +1,115 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+
+    <div class="ml-5 pb-5">
+        <div class="d-flex flex-row mb-2">
+
+            <label><h4>{{auction.name}}</h4></label>
+
+            {% if onWatch %}
+            <form action="{% url 'listing' auction.id %}" method="post">
+                {% csrf_token %}
+                <button class="p-2" style="font-size: large; background: transparent; border: none" type="submit" name="button" value="unwatch">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmarks-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12l-5-3-5 3V4z"/>
+                        <path d="M14 14l-1-.6V2a1 1 0 0 0-1-1H4.268A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v12z"/>
+                    </svg>
+                </button>
+            </form>
+            {% else %}
+            <form action="{% url 'listing' auction.id %}" method="post">
+                {% csrf_token %}
+            <button class="p-2" style="font-size: large; background: transparent; border: none" type="submit" name="button" value="watch">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmark-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M4.5 2a.5.5 0 0 0-.5.5v11.066l4-2.667 4 2.667V8.5a.5.5 0 0 1 1 0v6.934l-5-3.333-5 3.333V2.5A1.5 1.5 0 0 1 4.5 1h4a.5.5 0 0 1 0 1h-4zm9-1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V1.5a.5.5 0 0 1 .5-.5z"/>
+                    <path fill-rule="evenodd" d="M13 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                </svg>
+            </button>
+            </form>
+            {% endif %}
+        </div>
+        {% if not auction.image_url %}
+        <img class="img-fluid img-thumbnail" style="width: 150px;height: 180px;" src="../static/no-img.jpg">
+        {% else %}
+        <div class="mb-4"><img style="width: 20%; height: 30%;" src="{{auction.image_url}}"></div>
+        {% endif %}
+        <div><p class="text-md-left">{{auction.description}}</p></div>
+
+        <div class="d-flex flex-row mb-4" style="font-size: 13px">
+            <div class="col-md-2">
+            Created by : <b>{{auction.auction_username}}</b>
+            </div>
+            <div class="col-sm-3">{{auction.datetime}}(UTC)</div>
+            <div class="col-sm-3"> ({{bid_count}}) bids so far. </div>
+        </div>
+        <div class="d-flex flex-row mb-4 ml-4">
+            {% if highest_bid != "None" %}
+            <div> Highest Bid : {{highest_bid}} $
+                {% else %}
+                <div>Highest Bid : 0 $
+                    {% endif %}
+                    <span class="small" >(Started Bid : {{auction.start_bid}} $)</span></div>
+            </div>
+
+        <div>
+            {% if name == user.username and name != auction.auction_username %}
+            <div class="mb-3 ml-4">
+        <a> Your bid is the highest bid now.</a>
+        </div>
+            {% endif %}
+
+            {% if close %}
+            <div class="ml-4 mb-4">
+                <form action="{% url 'listing' auction.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="p-2 mr-4 btn btn-warning text-dark" type="submit" name="button" value="close">Close</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="d-flex flex-column">
+                <form class="form-group col-md-2" action="{% url 'listing' auction.id %}" method="post">
+                {% csrf_token %}
+                {% if error %}
+                <div style="font-size: smaller; color: crimson">{{error}}</div>
+                {% endif %}
+                <input class="mb-4 form-control" type="number" name="input_bid" placeholder="bid amount"><label class="small">value higher than {{auction.start_bid}}$</label>
+                <button class="btn btn-warning text-dark" type="submit" name="button" value="place">Place Bid($)</button>
+                </form>
+            </div>
+            {% endif %}
+
+<div class="d-flex pt-3 ml-4"><b>Comments</b></div>
+{% if auction.comment.all %}
+{% for comment in auction.comment.all %}
+                <ul class="small list-group mb-2 mt-2 mr-2 col-12">
+                    <li style="list-style: none; margin-right: 15px; margin-left : 15px;" class="text-wrap">
+                        <div class="text-change list-group-item border" style="background-color: lightgray;">
+                            <b>{{comment.name}}</b>
+                        </div>
+                        <div class="text-change list-group-item p-1 pl-4 " style="padding: 0; margin: 0;">
+                            {{comment.comment}}
+                        </div>
+                    </li>
+                </ul>
+{% endfor %}
+{% endif %}
+
+    <div class="ml-2">
+        <form action="{% url 'listing' auction.id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group col-12 p-2" style="width: 98%;">
+            <label class="small"><b>Leave a comment:</b></label>
+            <textarea style="background-color: lightgray;" class="form-control" rows="3" name="comment"></textarea>
+        </div>
+            <button class=" btn btn-warning text-dark" style="margin-left: 6px" type="submit" name="button" value="comment">Submit</button>
+        </form>
+    </div>
+
+
+    </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+
+<ul style="text-align: center; align-content: center" class="list-group ">
+    {% if win_list %}
+    {% for winner in win_list %}
+        <li class="mb-2 container text-dark bg-warning border-warning list-group-item">
+            {{ winner.user.username }} has won {{ winner.auction_won}} -- the final price of bid is <b>{{ winner.final_bid}} $</b>
+        </li>
+    {% endfor %}
+    {% endif %}
+</ul>
+
+{% endblock %}

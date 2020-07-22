@@ -1,0 +1,144 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <style type="text/css">
+            body {
+                padding: 0px;
+                color: white;
+                background: #7c52ff;
+                width: 100%;
+                font-family: Roboto;
+            }
+            .text-change{
+                color: #4d3c8b;
+            }
+
+            a:hover {
+                text-decoration: none;
+            }
+
+            .item-list-mod{
+                opacity: 90%;background-color: #6514FF; border: 1px #9fa3ff solid; border-radius: 30px 0px 30px 0px; border-top: 0px; border-right: 0px;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+
+    <nav class="nav navbar navbar-expand-lg navbar-inverse bg-inverse border border-info">
+        <a class="navbar-brand" href="{% url 'index' %}"> Auctions</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="glyphicon glyphicon-align-justify" style="color: gray"></span>
+        </button>
+        <div class="collapse navbar-collapse pt-4" id="navbarNavDropdown" >
+            <ul class="text-white navbar-nav">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist
+                        {% if cnt != 0 %}
+                        <label style="font-size: small ; padding: 0px 2px 0px 2px;  border-radius: 3px; color: black; background: lightskyblue">{{cnt}}</label>
+                        {% endif %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create' %}">Create Listings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'announce' %}">Announce</a>
+                </li>
+                {% if not user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div>
+                            {% if user.is_authenticated %}
+                             <strong>{{ user.username }}</strong>.
+                            {% else %}
+                            Not signed in.
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link" href="{% url 'logout' %}"><span style="color : #9d9d9d;">Log Out</span></a>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <body style="padding: 0px; background: #7c52ff ;width: 100%; body:hover{ text-decoration : none;}">
+<!--    {% if user.is_authenticated %}-->
+<!--    <div>-->
+<!--        {% if user.is_authenticated %}-->
+<!--        Signed in as <strong>{{ user.username }}</strong>.-->
+<!--        {% else %}-->
+<!--        Not signed in.-->
+<!--        {% endif %}-->
+<!--    </div>-->
+<!--    <div class="navbar navbar-inverse">-->
+<!--        <div>-->
+<!--            <a class="nav-link" href="#">-->
+<!--                <img src="{% static 'auctions/brand.png' %}">-->
+<!--            </a>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">-->
+<!--                <span class="icon-bar"></span>-->
+<!--                <span class="icon-bar"></span>-->
+<!--                <span class="icon-bar"></span>-->
+<!--            </button>-->
+<!--                            <div class="collapse navbar-collapse" id="myNavbar">-->
+<!--            <ul>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a class="nav-link" href="{% url 'categories' %}">Categories</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist-->
+<!--                        {% if cnt != 0 %}-->
+<!--                        <label style="font-size: small ; border: 1px solid cornflowerblue; border-radius: 3px; color: indianred; background: lightgray">{{cnt}}</label>-->
+<!--                        {% endif %}-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="{% url 'create' %}">Create Listings</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>-->
+<!--                </li>-->
+<!--                {% else %}-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="{% url 'login' %}">Log In</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="{% url 'register' %}">Register</a>-->
+<!--                </li>-->
+<!--                {% endif %}-->
+<!--            </ul>-->
+<!--        </div>-->
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>

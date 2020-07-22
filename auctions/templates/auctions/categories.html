@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+{% for category in category_list %}
+    <ul style="text-align: center; align-content: center;" class="container list-group" >
+        <a href="{% url 'category' category %}">
+            <li class="list-group-item bg-warning">
+            {{category}}
+            </li>
+        </a>
+    </ul>
+{% endfor %}
+
+{% endblock %}

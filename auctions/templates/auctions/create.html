@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div>
+    <h4 class="ml-4">Create Listing</h4>
+    <form class="d-flex flex-column" action="{% url 'create' %}" method="post">
+        {% csrf_token %}
+        {% if error %}
+        <div style="font-size: smaller; color: crimson">{{error}}</div>
+        {% endif %}
+        <div class="col-3">
+            {% for f in form %}
+            <div>{{f.label}}
+                {% if f.label == "Img url" %}
+                   <span>(Optional)</span>
+                {% endif %}
+                {% if f.label == "Start bid" %}
+                <span>($)</span>
+                {% endif %}
+            </div>
+            <div class="form-group text-change">
+                {{f}}
+            </div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-warning text-dark" style="width: 100px; margin-left: 17px; margin-bottom: 20px" type="submit">Create</button>
+    </form>
+
+</div>
+
+{% endblock %}
