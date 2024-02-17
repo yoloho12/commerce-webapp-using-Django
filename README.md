@@ -1,2 +1,2 @@
 # commerce
-Commerce for auction
+Commerce for auction using Django
